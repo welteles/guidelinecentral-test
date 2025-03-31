@@ -13,7 +13,7 @@ class Product
 
     public function __construct(array $data)
     {
-        $this->id = $data['id'];
+        $this->id = $data['id'] ?? '';
         $this->productType = $data['productType'];
         $this->name = $data['name'];
         $this->description = $data['description'];

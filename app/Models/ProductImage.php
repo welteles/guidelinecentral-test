@@ -12,7 +12,7 @@ class ProductImage
 
     public function __construct(array $data)
     {
-        $this->id = $data['id'];
+        $this->id = $data['id'] ?? '';
         $this->productId = $data['productId'];
         $this->filename = $data['filename'];
     }
