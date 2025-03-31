@@ -22,9 +22,8 @@ abstract class JsonService implements JsonServiceInterface
 
     public function find(string $id): ?object
     {
-        $readFile = $this->readFile();
-        foreach($readFile as $item) {
-            if($item->id === $id) {
+        foreach ($this->readFile() as $item) {
+            if ($item['id'] === $id) {
                 return new $this->modelClass($item);
             }
         }
@@ -32,29 +31,27 @@ abstract class JsonService implements JsonServiceInterface
     }
 
     public function save(object $model): void
-    {   
+    {
         $items = $this->readFile();
         $data = get_object_vars($model);
 
+        // Generate UUID if missing
         if (empty($data['id'])) {
             $data['id'] = (string) Str::uuid();
             $items[] = $data;
-            $this->writeFile($items);
-            return;
-        }
-
-        $found = false;
-
-        foreach($items as $item) {
-            if ($item->id === $data['id']) {
-                $item = $data;
-                $found = true;  
-                break;
+        } else {
+            $found = false;
+            foreach ($items as &$item) {
+                if ($item['id'] === $data['id']) {
+                    $item = $data;
+                    $found = true;
+                    break;
+                }
             }
-        }
 
-        if (!$found) {  
-            $items[] = $data;
+            if (!$found) {
+                $items[] = $data;
+            }
         }
 
         $this->writeFile($items);
